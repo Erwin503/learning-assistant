@@ -137,10 +137,6 @@ const Schedule = sequelize.define("Schedule", {
   },
 });
 
-// Связь многие ко многим между User и Group
-User.belongsToMany(Block, { through: "ViewedBlocks", as: "viewedBlocks" });
-Block.belongsToMany(User, { through: "ViewedBlocks", as: "users" });
-
 
 Block.belongsTo(Category, { foreignKey: "categoryId" });
 Category.hasMany(Block, { as: "blocks", foreignKey: "categoryId" });
@@ -159,6 +155,15 @@ User.hasMany(Group, { as: "ownedGroups", foreignKey: "ownerId" });
 // связь между Block и Card
 Block.hasMany(Card, { as: "cards", foreignKey: "blockId" });
 Card.belongsTo(Block, { foreignKey: "blockId" });
+
+User.hasMany(Schedule, {as: "schedules", foreignKey: "scheduleId"})
+Schedule.belongsTo(User, {as: "users", foreignKey: "userId"})
+
+Block.hasMany(Schedule, {as: "schedules", foreignKey: "scheduleId"})
+Schedule.belongsTo(Block, {as: "blocks", foreignKey: "blockId"})
+
+Group.hasMany(Schedule, {as: "schedules", foreignKey: "scheduleId"})
+Schedule.belongsTo(Group, {as: "groups", foreignKey: "groupId"})
 
 module.exports = {
   User,
