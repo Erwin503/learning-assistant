@@ -172,7 +172,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     child: SizedBox(
                       height: 116,
                       child: FutureBuilder<List<Course>>(
-                          future: Future.value(CourseData.coursesList),
+                          future: Future.value(ApiService().fetchCourses()),
+                          // future: Future.value(CourseData.coursesList),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {

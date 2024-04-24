@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: S.delegate.supportedLocales,
-        locale: Locale("en"),
+        locale: Locale("ru"),
         title: 'Education App',
         theme: themeData,
         routes: {
