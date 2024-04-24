@@ -5,21 +5,18 @@ const {
   create,
   getAll,
   getOne,
-  getByUser,
   deleteItem,
   updateItem,
-  // getViewedBlocksByUserId,
-  // addBlockToViewed
-} = require("../controllers/blockController.js");
+  getSchedulesByUserId,
+  getSchedulesByGroupId,
+} = require("../controllers/schedulesController.js")
 
 router.post("/", create);
 router.get("/", getAll);
 router.get("/:id", getOne);
-router.get("/user/:userId", getByUser);
+router.get("/user/:userId", getSchedulesByUserId);
+router.get("/group/:groupId", getSchedulesByGroupId);
 router.delete("/:id", deleteItem);
 router.put("/:id", updateItem);
-// router.post("/viewed", addBlockToViewed);
-// router.get("/viewed/:id", getViewedBlocksByUserId);
-
 
 module.exports = router;
