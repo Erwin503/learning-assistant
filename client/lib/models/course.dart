@@ -1,11 +1,13 @@
 class Course {
-  final String title;
-  final int studentCount;
-  final int cardCount;
-  final String iconUrl;
-  final String description;
+  int id;
+  String title;
+  int studentCount;
+  int cardCount;
+  String iconUrl;
+  String description;
 
   Course({
+    required this.id,
     required this.title,
     required this.studentCount,
     required this.cardCount,
@@ -16,6 +18,7 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
       title: json['title'],
+      id: json['id'],
       studentCount: json['student_count'],
       cardCount: json['card_count'],
       description: json['description'],

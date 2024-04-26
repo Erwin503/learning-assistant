@@ -1,4 +1,5 @@
 import 'package:education_app/features/card_page/view/card_page_screen.dart';
+import 'package:education_app/features/course_page/view/create_course_page_screen.dart';
 import 'package:education_app/generated/l10n.dart';
 import 'package:education_app/models/course_arguments.dart';
 import 'package:education_app/ui/theme/theme.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'features/card_page/view/create_card_page_screen.dart';
 import 'features/course_page/course_page.dart';
 import 'features/courses_list_page/view/courses_list_page_sceen.dart';
 import 'features/home_page/home_page.dart';
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         theme: themeData,
         routes: {
           // '/': (context) => CardPage(),
+          // '/': (context) => CourseCompletionScreen(),
           '/': (context) => HomePageScreen(),
           '/course': (context) {
             final courseId = ModalRoute.of(context)?.settings.arguments as int;
@@ -47,6 +50,11 @@ class MyApp extends StatelessWidget {
           '/log-in': (context) => LogInPage(),
           '/sign-up': (context) => SignPage(),
           '/card': (context) => CardPage(),
+          '/create-card': (context) {
+            final courseId = ModalRoute.of(context)?.settings.arguments as int;
+            return CreateCardPage(courseId: courseId);
+          },
+          '/create-course': (context) => CreateCoursePage(),
           '/settings': (context) => SettingsPageScreen(),
           '/courses-list': (context) {
             final args =

@@ -189,16 +189,12 @@ class _CourseReviewsState extends State<CourseReviews> {
                     ),
                   ],
                 ),
-                FormField(
-                  builder: (FormFieldState<String> state) {
-                    return TextField(
-                      controller: reviewController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Введите ваш отзыв',
-                      ),
-                    );
-                  },
+                TextField(
+                  decoration: InputDecoration(
+                      hintText: "Отзыв",
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 75, 91, 99)),
+                      border: InputBorder.none),
                 ),
                 MaterialButton(
                   onPressed: () {

@@ -6,18 +6,21 @@ import '../models/course.dart';
 class CourseData {
   static final List<Course> coursesList = [
     Course(
+        id: 1,
         title: "Введение в программирование. Python.",
         studentCount: 150,
         cardCount: 20,
         iconUrl: "https://example.com/icon1.png",
         description: "Learn the basics of programming."),
     Course(
+        id: 2,
         title: "Advanced Database Systems",
         studentCount: 120,
         cardCount: 25,
         iconUrl: "https://example.com/icon2.png",
         description: "Dive deeper into SQL and NoSQL databases."),
     Course(
+        id: 3,
         title: "Web Development",
         studentCount: 200,
         cardCount: 30,
