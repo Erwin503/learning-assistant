@@ -104,14 +104,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      var idLastEl = CourseData.coursesList.last.id;
-                      CourseData.coursesList.add(Course(
-                          id: idLastEl + 1,
-                          title: "",
-                          studentCount: 0,
-                          cardCount: 0,
-                          iconUrl: "",
-                          description: ""));
                       Navigator.of(context).pushNamed("/create-course");
                     },
                     child: Row(

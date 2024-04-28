@@ -25,4 +25,8 @@ class Course {
       iconUrl: json['icon_url'],
     );
   }
+  @override
+  String toString() {
+    return 'Course(id: $id, title: "$title", studentCount: $studentCount, cardCount: $cardCount, iconUrl: "$iconUrl", description: "$description")';
+  }
 }
