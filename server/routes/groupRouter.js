@@ -11,7 +11,6 @@ const {
   addUserToGroup,
   removeUserFromGroup,
   findGroupByName,
-  getUsers,
 } = require("../controllers/groupController.js");
 
 router.post("/", create);

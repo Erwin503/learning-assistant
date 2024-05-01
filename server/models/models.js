@@ -70,7 +70,7 @@ const Block = sequelize.define("Block", {
     type: DataTypes.STRING(200),
   },
   name: {
-    type: DataTypes.STRING(1000),
+    type: DataTypes.STRING(100),
     allowNull: false,
     unique: true,
   },
