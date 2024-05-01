@@ -147,7 +147,6 @@ class groupController {
         next(badRequest(e.message)); 
     }
 }
-
 }
 
 module.exports = groupController;

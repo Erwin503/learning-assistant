@@ -10,7 +10,8 @@ const {
   updateItem,
   addUserToGroup,
   removeUserFromGroup,
-  findGroupByName
+  findGroupByName,
+  getUsers,
 } = require("../controllers/groupController.js");
 
 router.post("/", create);
