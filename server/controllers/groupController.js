@@ -3,7 +3,7 @@ const { badRequest } = "../error/ApiError";
 
 class groupController {
   static async create(req, res) {
-    // try {
+    try {
       const ownerId = Number(req.body.ownerId);
       const name = req.body.name;
       console.log({ name, ownerId });
@@ -12,9 +12,9 @@ class groupController {
       }
       const newGroup = await Group.create({ name, ownerId });
       return res.status(201).json({ data: newGroup });
-    // } catch (error) {
-    //   return res.status(500).json({ error: "Internal server error" });
-    // }
+    } catch (error) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
   }
 
   static async getAll(req, res) {
@@ -131,6 +131,23 @@ class groupController {
       next(badRequest(e.message));
     }
   }
+  static async findGroupByName(req, res) {
+    try {
+        const { name } = req.params; 
+        const group = await Group.findOne({
+            where: { name }
+        });
+
+        if (!group) {
+            return res.status(404).json({ error: "Group not found" });
+        }
+
+        return res.status(200).json({ data: group });
+    } catch (e) {
+        next(badRequest(e.message)); 
+    }
+}
+
 }
 
 module.exports = groupController;

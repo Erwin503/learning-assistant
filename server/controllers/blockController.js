@@ -4,13 +4,14 @@ const { badRequest } = require("../error/ApiError");
 class blockController {
   async create(req, res, next) {
     try {
-      let { description, icon, userId, color, categoryId } = req.body;
+      let { description, icon, userId, color, categoryId, name } = req.body;
 
       const block = await Block.create({
         description,
         icon,
         userId: Number(userId),
         color,
+        name,
         categoryId: Number(categoryId),
       });
       const response = {
@@ -28,7 +29,7 @@ class blockController {
 
   async getAll(req, res) {
     const blocks = await Block.findAll({
-      attributes: ["description", "icon", "id"],
+      attributes: ["description", "icon", "id", "name"],
     });
     if (blocks.length === 0) {
       return res.status(200).json({ message: "No blocks found" });
@@ -38,6 +39,7 @@ class blockController {
       data: blocks.map((block) => {
         return {
           description: block.description,
+          name: block.name,
           icon: block.icon,
           id: block.id,
           color: block.color,
@@ -103,6 +105,7 @@ class blockController {
       data: blocks.map((block) => {
         return {
           description: block.description,
+          name: block.name,
           icon: block.icon,
           id: block.id,
           request: {
@@ -132,6 +135,7 @@ class blockController {
             description: block.description,
             icon: block.icon,
             id: block.id,
+            name: block.name,
             request: {
               type: "GET",
               url: "http://localhost:3000/api/block/" + block.id,
@@ -147,7 +151,7 @@ class blockController {
 
   async updateItem(req, res, next) {
     try {
-      let { description, icon, userId, color, id, categoryId } = req.body;
+      let { description, icon, userId, color, id, categoryId, name } = req.body;
 
       const [updated] = await Block.update(
         {
@@ -156,6 +160,7 @@ class blockController {
           userId,
           color,
           categoryId,
+          name,
         },
         {
           where: {
@@ -221,6 +226,27 @@ class blockController {
   //     res.status(500).json({ error: e.message });
   //   }
   }
+  async findBlockByName(req, res) {
+    try {
+        const { name } = req.params; // Expect the block name to be passed as a URL parameter
+        const block = await Block.findOne({
+            where: { name } // Find a block where the name matches the provided name
+        });
+
+        if (!block) {
+            return res.status(404).json({ error: "Block not found" });
+        }
+
+        const response = {
+            data: block,
+        };
+
+        return res.status(200).json(response);
+    } catch (e) {
+        next(badRequest(e.message)); 
+    }
+}
+
 }
 
 module.exports = new blockController();

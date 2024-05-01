@@ -69,6 +69,11 @@ const Block = sequelize.define("Block", {
   color: {
     type: DataTypes.STRING(200),
   },
+  name: {
+    type: DataTypes.STRING(1000),
+    allowNull: false,
+    unique: true,
+  },
 });
 
 const Group = sequelize.define("Group", {
@@ -80,6 +85,7 @@ const Group = sequelize.define("Group", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   ownerId: {
     type: DataTypes.INTEGER,
@@ -137,7 +143,6 @@ const Schedule = sequelize.define("Schedule", {
   },
 });
 
-
 Block.belongsTo(Category, { foreignKey: "categoryId" });
 Category.hasMany(Block, { as: "blocks", foreignKey: "categoryId" });
 
@@ -156,14 +161,14 @@ User.hasMany(Group, { as: "ownedGroups", foreignKey: "ownerId" });
 Block.hasMany(Card, { as: "cards", foreignKey: "blockId" });
 Card.belongsTo(Block, { foreignKey: "blockId" });
 
-User.hasMany(Schedule, {as: "schedules", foreignKey: "scheduleId"})
-Schedule.belongsTo(User, {as: "users", foreignKey: "userId"})
+User.hasMany(Schedule, { as: "schedules", foreignKey: "scheduleId" });
+Schedule.belongsTo(User, { as: "users", foreignKey: "userId" });
 
-Block.hasMany(Schedule, {as: "schedules", foreignKey: "scheduleId"})
-Schedule.belongsTo(Block, {as: "blocks", foreignKey: "blockId"})
+Block.hasMany(Schedule, { as: "schedules", foreignKey: "scheduleId" });
+Schedule.belongsTo(Block, { as: "blocks", foreignKey: "blockId" });
 
-Group.hasMany(Schedule, {as: "schedules", foreignKey: "scheduleId"})
-Schedule.belongsTo(Group, {as: "groups", foreignKey: "groupId"})
+Group.hasMany(Schedule, { as: "schedules", foreignKey: "scheduleId" });
+Schedule.belongsTo(Group, { as: "groups", foreignKey: "groupId" });
 
 module.exports = {
   User,

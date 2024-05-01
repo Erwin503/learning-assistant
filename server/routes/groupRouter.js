@@ -10,6 +10,7 @@ const {
   updateItem,
   addUserToGroup,
   removeUserFromGroup,
+  findGroupByName
 } = require("../controllers/groupController.js");
 
 router.post("/", create);
@@ -20,6 +21,7 @@ router.delete("/user", removeUserFromGroup); // id передавать в те�
 router.put("/:id", updateItem);
 router.post("/user", addUserToGroup); // id передавать в теле запроса
 router.get("/user/:id", getUsers);
+router.get("/name/:name", findGroupByName);
 
 
 module.exports = router;
