@@ -67,13 +67,13 @@ class CoursePage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${course[courseId].studentCount} students",
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.normal),
-                      ),
+                      // Text(
+                      //   "${course[courseId].studentCount} students",
+                      //   style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      //       color: Colors.white,
+                      //       fontSize: 24,
+                      //       fontWeight: FontWeight.normal),
+                      // ),
                       Text(
                         "${course[courseId].cardCount} cards",
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -100,7 +100,7 @@ class CoursePage extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         CourseInfo(description: course[courseId].description),
-                        CourseReviews(),
+                        // CourseReviews(),
                         SizedBox(height: 0),
                       ],
                     ),
@@ -130,7 +130,7 @@ class CourseInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Descriotion',
+              'Описание',
               textDirection: TextDirection.ltr,
               style: Theme.of(context).textTheme.displayLarge,
             ),

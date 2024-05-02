@@ -1,5 +1,6 @@
 import 'package:education_app/features/card_page/view/card_page_screen.dart';
 import 'package:education_app/features/course_page/view/create_course_page_screen.dart';
+import 'package:education_app/features/group_page/view/group_page_screen.dart';
 import 'package:education_app/generated/l10n.dart';
 import 'package:education_app/models/course_arguments.dart';
 import 'package:education_app/ui/theme/theme.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
           },
           '/create-course': (context) => CreateCoursePage(),
           '/settings': (context) => SettingsPageScreen(),
+          '/group': (context) => GroupPageScreen(),
           '/courses-list': (context) {
             final args =
                 ModalRoute.of(context)!.settings.arguments as CourseArguments;

@@ -125,10 +125,10 @@ class CourseItem extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  Text(
-                    getStudentCount(studentCount, context),
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
+                  // Text(
+                  //   getStudentCount(studentCount, context),
+                  //   style: Theme.of(context).textTheme.displayMedium,
+                  // ),
                 ],
               ),
             ),

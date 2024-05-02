@@ -2,6 +2,7 @@ import 'package:education_app/models/card.dart';
 import 'package:flutter/material.dart';
 
 import '../models/course.dart';
+import '../models/group.dart';
 
 class CourseData {
   static final List<Course> coursesList = [
@@ -110,5 +111,13 @@ class CourseData {
         blockId: 10,
         updatedAt: DateTime.now(),
         createdAt: DateTime.now()),
+  ];
+
+  static final List<Group> groupsList = [
+    Group(id: 1, name: "Group A", ownerId: 1, studentCount: 5),
+    Group(id: 2, name: "Group B", ownerId: 1, studentCount: 2),
+    Group(id: 3, name: "Group C", ownerId: 2, studentCount: 3),
+    Group(id: 4, name: "Group D", ownerId: 3, studentCount: 4),
+    Group(id: 5, name: "Group E", ownerId: 4, studentCount: 5),
   ];
 }

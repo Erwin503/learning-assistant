@@ -8,6 +8,23 @@ class ApiService {
   final String baseUrl = "https://fakerapi.it/api/v1";
   final String urlToServer = "http://localhost:3000/api";
 
+  Future<Map<String, dynamic>> createBlock(
+      Map<String, dynamic> blockData) async {
+    var url = Uri.parse('$baseUrl/block');
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(blockData),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+          'Failed to create block. Status code: ${response.statusCode}');
+    }
+  }
+
   Future<List<Course>> fetchCourses() async {
     var url = Uri.parse(
         '$baseUrl/custom?_quantity=10&title=name&student_count=counter&card_count=counter&icon_url=word&description=text');

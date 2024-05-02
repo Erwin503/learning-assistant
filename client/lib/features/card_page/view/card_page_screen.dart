@@ -13,6 +13,7 @@ class _CardPageState extends State<CardPage>
     with SingleTickerProviderStateMixin {
   late MatchEngine matchEngine;
   bool _showButton = false;
+  int passedCard = 0;
   final course = CourseData.cardsList;
 
   @override
@@ -23,6 +24,9 @@ class _CardPageState extends State<CardPage>
       return SwipeItem(
         content: item,
         likeAction: () {
+          setState(() {
+            passedCard += 1;
+          });
           print("Выучено: ${item.text}");
         },
         nopeAction: () {
@@ -54,7 +58,7 @@ class _CardPageState extends State<CardPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Выучено 0 из 20',
+                Text('Выучено ${passedCard} из 20',
                     style: TextStyle(fontSize: 24, color: Colors.white)),
                 SizedBox(height: 10),
                 Expanded(
@@ -251,7 +255,7 @@ class _CardPageState extends State<CardPage>
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildCustomContainer(title: 'Картинка'),
+        // _buildCustomContainer(title: 'Картинка'),
         SizedBox(height: 20),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,

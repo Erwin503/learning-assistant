@@ -1,9 +1,9 @@
+import 'package:education_app/features/home_page/widgets/education_screen.dart';
 import 'package:education_app/generated/l10n.dart';
 import 'package:education_app/models/course_arguments.dart';
 import 'package:education_app/widgets/course_item.dart';
 import 'package:flutter/material.dart';
 import '../../../models/course.dart';
-import '../../../service/api_service.dart';
 import 'dart:math';
 import '../../data.dart';
 
@@ -57,9 +57,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
     HomeScreen(),
     Text('Create Page',
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
-    Text('Educatiom Page',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold)),
+    EducationScreen()
   ];
+
+  void showGroupForm(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          child: _createGroupForm(context),
+        );
+      },
+    );
+  }
 
   void _showDialog() {
     showModalBottomSheet(
@@ -80,7 +91,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed("/create-card");
+                      showGroupForm(context);
                     },
                     child: Row(
                       children: [
@@ -152,15 +163,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Главная',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle_outline),
-            label: 'Create',
+            label: 'Создать',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            label: 'Education',
+            label: 'Образование',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -237,6 +248,57 @@ class _HomePageScreenState extends State<HomePageScreen> {
       body: _widgetOptions.elementAt(_selectedIndex),
     );
   }
+
+  Widget _createGroupForm(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child: Container(
+          height: 180,
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Придумайте название группы",
+                textDirection: TextDirection.ltr,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontSize: 18),
+              ),
+              TextField(
+                onChanged: (text) {},
+                style: TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                    hintText: "Название",
+                    hintStyle:
+                        TextStyle(color: Color.fromARGB(255, 75, 91, 99)),
+                    border: InputBorder.none),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text(
+                      "Сохранить",
+                      style: TextStyle(color: Color.fromARGB(255, 13, 92, 92)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )),
+      ],
+    );
+  }
 }
 
 class HomeScreen extends StatelessWidget {
@@ -251,125 +313,125 @@ class HomeScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Align(
-                child: Text(S.of(context).activeBlock,
-                    style: Theme.of(context).textTheme.displayLarge),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pushNamed(
-                    '/courses-list',
-                    arguments: CourseArguments('001', 'started'),
-                  );
-                },
-                child: Align(
-                  child: Text('>',
-                      style: Theme.of(context).textTheme.displayLarge),
-                ),
-              ),
-            ],
-          ),
-          isUserCourse
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 116,
-                        child: Center(
-                          child: Text(
-                            "У вас еще нет собственных курсов",
-                            style: Theme.of(context).textTheme.displayMedium,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: SizedBox(
-                    height: 116,
-                    child: FutureBuilder<List<Course>>(
-                        // future: Future.value(ApiService().fetchCourses()),
-                        future: Future.value(CourseData.coursesList),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                                child: const CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else if (snapshot.hasData) {
-                            print(snapshot.data);
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Align(
+          //       child: Text(S.of(context).activeBlock,
+          //           style: Theme.of(context).textTheme.displayLarge),
+          //     ),
+          //     InkWell(
+          //       onTap: () {
+          //         Navigator.of(context).pushNamed(
+          //           '/courses-list',
+          //           arguments: CourseArguments('001', 'started'),
+          //         );
+          //       },
+          //       child: Align(
+          //         child: Text('>',
+          //             style: Theme.of(context).textTheme.displayLarge),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // isUserCourse
+          //     ? Padding(
+          //         padding: const EdgeInsets.symmetric(vertical: 16.0),
+          //         child: Column(
+          //           children: [
+          //             SizedBox(
+          //               height: 116,
+          //               child: Center(
+          //                 child: Text(
+          //                   "У вас еще нет собственных курсов",
+          //                   style: Theme.of(context).textTheme.displayMedium,
+          //                 ),
+          //               ),
+          //             )
+          //           ],
+          //         ),
+          //       )
+          //     : Padding(
+          //         padding: const EdgeInsets.symmetric(vertical: 16.0),
+          //         child: SizedBox(
+          //           height: 116,
+          //           child: FutureBuilder<List<Course>>(
+          //               // future: Future.value(ApiService().fetchCourses()),
+          //               future: Future.value(CourseData.coursesList),
+          //               builder: (context, snapshot) {
+          //                 if (snapshot.connectionState ==
+          //                     ConnectionState.waiting) {
+          //                   return Center(
+          //                       child: const CircularProgressIndicator());
+          //                 } else if (snapshot.hasError) {
+          //                   return Text('Error: ${snapshot.error}');
+          //                 } else if (snapshot.hasData) {
+          //                   print(snapshot.data);
 
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                final course = snapshot.data![index];
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).pushNamed(
-                                      '/course',
-                                      arguments: index,
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: generateSpecialColor(),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(12.0),
-                                        )),
-                                    width: 160.0,
-                                    margin: EdgeInsets.only(right: 16.0),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 12.0, left: 12.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            course.title,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge,
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 12.0, right: 12.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Text(
-                                                  '1 / ${course.cardCount}',
-                                                  overflow: TextOverflow.fade,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          } else {
-                            return Text('No data available');
-                          }
-                        }),
-                  ),
-                ),
+          //                   return ListView.builder(
+          //                     scrollDirection: Axis.horizontal,
+          //                     itemCount: snapshot.data!.length,
+          //                     itemBuilder: (context, index) {
+          //                       final course = snapshot.data![index];
+          //                       return InkWell(
+          //                         onTap: () {
+          //                           Navigator.of(context).pushNamed(
+          //                             '/course',
+          //                             arguments: index,
+          //                           );
+          //                         },
+          //                         child: Container(
+          //                           decoration: BoxDecoration(
+          //                               color: generateSpecialColor(),
+          //                               borderRadius: BorderRadius.all(
+          //                                 Radius.circular(12.0),
+          //                               )),
+          //                           width: 160.0,
+          //                           margin: EdgeInsets.only(right: 16.0),
+          //                           child: Padding(
+          //                             padding: const EdgeInsets.only(
+          //                                 top: 12.0, left: 12.0),
+          //                             child: Column(
+          //                               crossAxisAlignment:
+          //                                   CrossAxisAlignment.start,
+          //                               children: [
+          //                                 Text(
+          //                                   course.title,
+          //                                   style: Theme.of(context)
+          //                                       .textTheme
+          //                                       .titleLarge,
+          //                                 ),
+          //                                 Spacer(),
+          //                                 Padding(
+          //                                   padding: const EdgeInsets.only(
+          //                                       bottom: 12.0, right: 12.0),
+          //                                   child: Row(
+          //                                     mainAxisAlignment:
+          //                                         MainAxisAlignment.end,
+          //                                     children: [
+          //                                       Text(
+          //                                         '1 / ${course.cardCount}',
+          //                                         overflow: TextOverflow.fade,
+          //                                         style: Theme.of(context)
+          //                                             .textTheme
+          //                                             .titleLarge,
+          //                                       )
+          //                                     ],
+          //                                   ),
+          //                                 ),
+          //                               ],
+          //                             ),
+          //                           ),
+          //                         ),
+          //                       );
+          //                     },
+          //                   );
+          //                 } else {
+          //                   return Text('No data available');
+          //                 }
+          //               }),
+          //         ),
+          //       ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: Row(
@@ -379,18 +441,18 @@ class HomeScreen extends StatelessWidget {
                   child: Text(S.of(context).communityBlock,
                       style: Theme.of(context).textTheme.displayLarge),
                 ),
-                Align(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                        "/courses-list",
-                        arguments: CourseArguments('001', 'community'),
-                      );
-                    },
-                    child: Text('>',
-                        style: Theme.of(context).textTheme.displayLarge),
-                  ),
-                ),
+                // Align(
+                //   child: InkWell(
+                //     onTap: () {
+                //       Navigator.of(context).pushNamed(
+                //         "/courses-list",
+                //         arguments: CourseArguments('001', 'community'),
+                //       );
+                //     },
+                //     child: Text('>',
+                //         style: Theme.of(context).textTheme.displayLarge),
+                //   ),
+                // ),
               ],
             ),
           ),

@@ -1,24 +1,32 @@
+import 'package:education_app/models/block.dart';
+import 'package:education_app/service/api_service.dart';
 import 'package:flutter/material.dart';
 import '../../../models/course.dart';
 import '../../../models/card.dart';
 import '../../data.dart';
 
-class CreateCoursePage extends StatelessWidget {
+class CreateCoursePage extends StatefulWidget {
+  @override
+  State<CreateCoursePage> createState() => _CreateCoursePageState();
+}
+
+class _CreateCoursePageState extends State<CreateCoursePage> {
   final course = CourseData.coursesList;
   var blockNameInputController = "";
   var blockDescriptionInputController = "";
   var cardTextInputController = "";
   var cardAnswerInputController = "";
   var cardCountBlock = 0;
+  final ApiService apiService = ApiService();
   List<BlockCard> createdCards = [];
 
-  void showCustomDialog(BuildContext context) {
+  void showCardForm(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.white,
-          child: _cardInfo(context),
+          child: _createCardForm(context),
         );
       },
     );
@@ -28,14 +36,8 @@ class CreateCoursePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).colorScheme.background,
-        iconTheme: IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pushNamed('/');
-          },
-        ),
       ),
       body: Container(
         width: double.infinity,
@@ -59,12 +61,24 @@ class CreateCoursePage extends StatelessWidget {
                   SizedBox(
                     height: 16,
                   ),
-                  Text(
-                    "${createdCards.length} cards",
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.normal),
+                  Row(
+                    children: [
+                      Text(
+                        "${cardCountBlock}",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          size: 32,
+                          Icons.collections,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
@@ -79,19 +93,26 @@ class CreateCoursePage extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40),
                         topRight: Radius.circular(40))),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _buildField(
-                          context, 'Название', "Название курса", "nameField"),
-                      _buildField(context, 'Описание',
-                          "Введите информацию о блоке", "descField"),
-                      // _buildActionButton("Готово", "white", context,
-                      //     "white", "createBlock"),
-                      _createCards(context)
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _buildField(
+                        context, 'Название', "Название курса", "nameField"),
+                    _buildField(context, 'Описание',
+                        "Введите информацию о блоке", "descField"),
+                    // _buildActionButton("Готово", "white", context, "white", "createBlock"),
+                    _createCards(context),
+                    Expanded(
+                      // Добавляем Expanded, чтобы ListView мог правильно расширяться
+                      child: ListView.builder(
+                        itemCount: createdCards.length,
+                        itemBuilder: (context, index) {
+                          return itemCard(createdCards[index]
+                              .text); // Передаем каждую карточку в виджет itemCard
+                        },
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -105,7 +126,7 @@ class CreateCoursePage extends StatelessWidget {
           children: [
             Expanded(
               child: _buildActionButton(
-                  "Удалить блок", "red", context, "white", "none"),
+                  "Удалить блок", "red", context, "white", "del"),
             ),
             SizedBox(width: 8),
             Expanded(
@@ -118,7 +139,7 @@ class CreateCoursePage extends StatelessWidget {
     );
   }
 
-  Widget _cardInfo(BuildContext context) {
+  Widget _createCardForm(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -126,10 +147,9 @@ class CreateCoursePage extends StatelessWidget {
           height: 240,
           padding: EdgeInsets.symmetric(horizontal: 24),
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(40)),
-              border:
-                  Border.all(color: const Color.fromARGB(255, 255, 255, 255))),
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -142,13 +162,16 @@ class CreateCoursePage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       _createCard();
-                      cardCountBlock += 1;
                       print("save");
                       print(createdCards.length);
                       print(createdCards.last.text);
                       for (var element in createdCards) {
                         print(element.text);
+                        print(createdCards.length);
                       }
+                      setState(() {
+                        cardCountBlock += 1;
+                      });
                       Navigator.of(context).pop();
                     },
                     child: Text("Сохранить"),
@@ -209,7 +232,7 @@ class CreateCoursePage extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            showCustomDialog(context);
+            showCardForm(context);
           },
           child: Container(
             height: 64,
@@ -229,6 +252,37 @@ class CreateCoursePage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Padding itemCard(String titleCard) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12.0),
+      child: Container(
+        height: 64,
+        decoration: BoxDecoration(
+            color: Color.fromARGB(255, 12, 134, 134),
+            borderRadius: BorderRadius.all(Radius.circular(24))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    titleCard,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -267,11 +321,20 @@ class CreateCoursePage extends StatelessWidget {
 
               Course newCourse = CourseData.coursesList.last;
               print(newCourse);
-              Navigator.of(context).pushNamed("/");
+              _createCourseAndCards();
+              // Navigator.of(context).pushNamed("/");
             } else {
               print("Вы не создали карточку");
             }
           }
+        } else if (buttinAction == "del") {
+          blockNameInputController = "";
+          blockDescriptionInputController = "";
+          cardTextInputController = "";
+          cardAnswerInputController = "";
+          cardCountBlock = 0;
+          createdCards = [];
+          Navigator.of(context).pushNamed('/');
         }
       },
       style: ElevatedButton.styleFrom(
@@ -294,16 +357,31 @@ class CreateCoursePage extends StatelessWidget {
     );
   }
 
-  Future<Course> _createCourse() async {
-    Course newCourse = Course(
-        id: 0,
-        title: blockNameInputController,
-        studentCount: 0,
-        cardCount: cardCountBlock,
-        iconUrl: "none",
-        description: blockDescriptionInputController);
-    CourseData.coursesList.add(newCourse);
-    return newCourse;
+  Future<Block> _createBlock() async {
+    try {
+      var response = await apiService.createBlock({
+        'name': "io",
+        'description': "blockDescriptionInputController",
+        'icon': "none",
+        'userId': 1, // Укажите правильные значения
+        'color': "white", // Укажите правильные значения
+        'categoryId': 1, // Укажите правильные значения
+      });
+
+      Block newBlock = Block.fromJson({
+        'id': response['data']['id'],
+        'title': blockNameInputController,
+        'studentCount':
+            0, // Значение по умолчанию или из response если доступно
+        'cardCount': cardCountBlock, // Укажите правильные значения
+        'iconUrl': response['data']['icon'],
+        'description': response['data']['description'],
+      });
+      return newBlock;
+    } catch (e) {
+      print("_____________12345_______________");
+      throw Exception('Failed to create block: $e');
+    }
   }
 
   Future<void> _createCard() async {
@@ -319,7 +397,12 @@ class CreateCoursePage extends StatelessWidget {
   }
 
   Future<void> _createCourseAndCards() async {
-    Course course = await _createCourse();
+    Navigator.of(context).pushNamed("/");
+    // print("________________________________________________");
+    // // Block course = await _createBlock();
+    // await _createBlock();
+    // print("________________________________________________");
+    // print(course);
     // await _createCard();
   }
 }
