@@ -15,10 +15,15 @@ class _CardPageState extends State<CardPage>
   bool _showButton = false;
   int passedCard = 0;
   final course = CourseData.cardsList;
+  late AnimationController _controller;
+  late Animation<double> _flipAnimation;
 
   @override
   void initState() {
     super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    _flipAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     List<SwipeItem> swipeItems = course.map((item) {
       return SwipeItem(
@@ -36,6 +41,12 @@ class _CardPageState extends State<CardPage>
     }).toList();
 
     matchEngine = MatchEngine(swipeItems: swipeItems);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,10 +76,33 @@ class _CardPageState extends State<CardPage>
                   child: SwipeCards(
                     matchEngine: matchEngine,
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: _cardInfo(context, course[index]),
+                      return GestureDetector(
+                        onTap: () {
+                          if (_controller.isDismissed) {
+                            _controller.forward();
+                          } else {
+                            _controller.reverse();
+                          }
+                        },
+                        child: AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            final isFront = (_flipAnimation.value < 0.5);
+                            return Transform(
+                              transform: Matrix4.identity()
+                                ..setEntry(3, 2, 0.001)
+                                ..rotateY(3.14159 * _flipAnimation.value),
+                              alignment: Alignment.center,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: isFront
+                                      ? _cardInfo(context, course[index])
+                                      : _cardAnswer(context, course[index]),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
@@ -289,6 +323,37 @@ class _CardPageState extends State<CardPage>
                     'Увидеть ответ', 'white', context, "white", "none")),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget _cardAnswer(BuildContext context, BlockCard card) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        // _buildCustomContainer(title: 'Картинка'),
+        SizedBox(height: 20),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: const Color.fromARGB(255, 255, 255, 255))),
+              child: Text(
+                card.text,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontWeight: FontWeight.normal, fontSize: 18),
+              ),
+            )),
+          ],
+        ),
+
+        SizedBox(height: 20),
+        // Кнопки "Написать ответ", "Увидеть ответ"
       ],
     );
   }
